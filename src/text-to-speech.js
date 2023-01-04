@@ -1,7 +1,7 @@
 const textToSpeech = require("@google-cloud/text-to-speech");
 const fs = require("fs");
 const util = require("util");
-const renderVideo = require("./video");
+const renderVideo = require("./render-video");
 const email = require("../text.json");
 
 const client = new textToSpeech.TextToSpeechClient();

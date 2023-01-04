@@ -193,9 +193,9 @@ const start = async () => {
 const makeDescription = (links) => {
   let linkString = "";
   links.map((link) => (linkString = linkString + link + "\r\n"));
-  const desc = `ASSINE A NEWSLETTER GRATUITAMENTE POR AQUI: https://filipedeschamps.com.br/newsletter\r\n\r\n${
-    links.length > 0 && `Links citados no vídeo:\r\n${linkString}`
-  }\r\nTODOS OS CRÉDITOS DEVEM SER DIRECIONADOS AO FILIPE DESCHAMPS! s2\r\nESTE ROBÔ FOI CRIADO COM O INTUITO DE TESTAR AS TECNOLOGIAS, PROMOVER A NEWSLETTER E DISSEMINAR ESSSAS INFORMAÇÕES FILTRADAS E CONFIÁVEIS DISPONIBILIZADAS NELA GRATUITAMENTE.\r\n\r\nDesenvolvido por Gabriel Pasini: https://pasini.dev`;
+  const desc = `ASSINE A NEWSLETTER GRATUITAMENTE PELO LINK: https://filipedeschamps.com.br/newsletter\r\n\r\n${
+    links.length > 0 ? `Links citados no vídeo:\r\n${linkString}` : ""
+  }\r\nESTE ROBÔ FOI CRIADO COM O INTUITO DE TESTAR AS TECNOLOGIAS, PROMOVER A NEWSLETTER E DISSEMINAR ESSSAS INFORMAÇÕES FILTRADAS E CONFIÁVEIS DISPONIBILIZADAS NELA GRATUITAMENTE.\r\n\r\nDesenvolvido por Gabriel Pasini: https://pasini.dev`;
   return desc;
 };
 
