@@ -36,6 +36,7 @@ const saveEmail = (email) =>
         '> [gmail-robot] Erro ao salvar/atualizar o email no banco de dados: ' +
           err
       );
+      throw err;
     }
   });
 
@@ -107,8 +108,8 @@ app.post('/format-email', async (req, res) => {
     const email = JSON.parse(req.body);
     await saveEmail(email);
     const emailFormated = formatEmail(email);
-    const jsonFile = JSON.stringify(emailFormated, null, 2);
-    fs.writeFileSync('text.json', jsonFile);
+    // const jsonFile = JSON.stringify(emailFormated, null, 2);
+    // fs.writeFileSync('text.json', jsonFile);
     res.status(200).send({ emailFormated });
   } catch (err) {
     res.status(400).send(err);
