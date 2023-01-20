@@ -26,17 +26,18 @@ const saveEmail = (email) =>
         console.log(
           '> [gmail-robot] Este e-mail já está salvo! Tente novamente mais tarde...'
         );
+        return resolve(false);
       } else {
         await Email.create(email);
         console.log('> [gmail-robot] Novo e-mail salvo no banco de dados!');
       }
-      return resolve(email);
+      return resolve(true);
     } catch (err) {
       console.log(
         '> [gmail-robot] Erro ao salvar/atualizar o email no banco de dados: ' +
           err
       );
-      throw err;
+      return reject(true);
     }
   });
 
@@ -113,7 +114,9 @@ app.post('/format-email', async (req, res) => {
   try {
     console.log('> [format-email] Iniciando tratamento do e-mail...');
     const email = req.body;
-    await saveEmail(email);
+    const newEmail = await saveEmail(email);
+    if (!newEmail) res.status(400).send('Este e-mail ja foi utilizado');
+
     const emailFormated = formatEmail(email);
     const jsonFile = JSON.stringify(emailFormated, null, 2);
     fs.writeFileSync('text.json', jsonFile);
