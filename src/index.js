@@ -99,7 +99,7 @@ const formatEmail = (objEmail) => {
 
 app.post('/format-email', async (req, res) => {
   try {
-    const email = req.body;
+    const email = JSON.parse(req.body);
     await saveEmail(email);
     const emailFormated = formatEmail(email);
     const jsonFile = JSON.stringify(emailFormated, null, 2);
