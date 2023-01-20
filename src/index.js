@@ -130,7 +130,6 @@ app.post('/format-email', async (req, res) => {
 
 app.get('/', async (req, res) => {
   try {
-    console.log('> [format-email] Iniciando tratamento do e-mail...');
     const { id } = req.query;
     if (id) {
       const savedEmail = await Email.findOne({ id });
