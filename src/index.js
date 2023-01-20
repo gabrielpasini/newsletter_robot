@@ -72,9 +72,7 @@ const makeDescription = (links) => {
 
 const formatEmail = (objEmail) => {
   if (objEmail) {
-    let text = objEmail.conteudo.split(
-      'Filipe Deschamps Newsletter\r\n\r\n'
-    )[1];
+    let text = objEmail.conteudo.split('Filipe Deschamps Newsletter')[1];
     console.log(text);
     text = text.split('Cancelar inscrição (')[0];
     const links = text.match(/\bhttps?:\/\/\S+/gi);
@@ -86,8 +84,8 @@ const formatEmail = (objEmail) => {
       ''
     );
     //substitui "Link Patrocinado/Afiliado" por "Link na descrição"
-    text = text.replace('Link Patrocinado (\r\n\r\n)', 'Link na descrição!');
-    text = text.replace('Link Afiliado (\r\n\r\n)', 'Link na descrição!');
+    text = text.replace('Link Patrocinado ()', 'Link na descrição!');
+    text = text.replace('Link Afiliado ()', 'Link na descrição!');
     //adiciona finalização
     text =
       text +
