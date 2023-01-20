@@ -98,7 +98,7 @@ const formatEmail = (objEmail) => {
       text =
         text +
         'Este robô foi desenvolvido por Gabriel Pasini!\r\nDeixe o like e se inscreva! Até a próxima!';
-      objEmail.content = text;
+      objEmail.formattedContent = text;
       objEmail.description = description;
       objEmail.tags = tags;
       console.log('> [format-email] Conteudo formatado com sucesso');
@@ -114,16 +114,44 @@ app.post('/format-email', async (req, res) => {
   try {
     console.log('> [format-email] Iniciando tratamento do e-mail...');
     const email = req.body;
-    const newEmail = await saveEmail(email);
+    const emailFormated = formatEmail(email);
+
+    const newEmail = await saveEmail(emailFormated);
     if (!newEmail) res.status(400).send('Este e-mail ja foi utilizado');
 
-    const emailFormated = formatEmail(email);
     const jsonFile = JSON.stringify(emailFormated, null, 2);
     fs.writeFileSync('text.json', jsonFile);
     console.log('> [format-email] Conteudo do e-mail salvo com sucesso');
     res.status(200).send({ emailFormated });
   } catch (err) {
     res.status(400).send({ error: err });
+  }
+});
+
+app.get('/', async (req, res) => {
+  try {
+    console.log('> [format-email] Iniciando tratamento do e-mail...');
+    const { id } = req.query;
+    if (id) {
+      const savedEmail = await Email.findOne({ id });
+      if (savedEmail)
+        return res.send(
+          `<head><title>Notícias de tecnologia</title></head><h1>${
+            savedEmail.subject
+          }</h1><h2><pre>${
+            savedEmail.content.split('Cancelar inscrição (')[0]
+          }</pre><h2>`
+        );
+      return res.send(
+        `<head><title>Notícias de tecnologia</title></head><h1>Notícias de tecnologia - Deschamps Newsletter</h1><h2>Notícia não encontrada, insira um ID válido!<h2>`
+      );
+    } else {
+      return res.send(
+        `<head><title>Notícias de tecnologia</title></head><h1>Notícias de tecnologia - Deschamps Newsletter</h1><h2>Adicione um ID válido na URL para buscar pela notícia!<h2>`
+      );
+    }
+  } catch (err) {
+    return res.status(400).send({ error: err });
   }
 });
 

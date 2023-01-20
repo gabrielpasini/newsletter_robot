@@ -10,7 +10,7 @@ const client = new textToSpeech.TextToSpeechClient();
   console.log('> [mp3-robot] Criando arquivo de audio...');
   const request = {
     input: {
-      text: email.content,
+      text: email.formattedContent,
     },
     voice: {
       languageCode: 'pt-BR',

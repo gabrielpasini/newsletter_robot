@@ -10,6 +10,15 @@ const EmailSchema = new mongoose.Schema({
   content: {
     type: String,
   },
+  formattedContent: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
+  tags: {
+    type: Array,
+  },
 });
 
 const Email = mongoose.model('Email', EmailSchema);
