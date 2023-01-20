@@ -78,18 +78,21 @@ const formatEmail = (objEmail) => {
       let text = objEmail?.content?.includes('Filipe Deschamps Newsletter')
         ? objEmail?.content?.split('Filipe Deschamps Newsletter')[1]
         : objEmail?.content;
-      text = text?.split('Cancelar inscrição (')[0];
+      text = text.split('Cancelar inscrição (')[0];
+      text = text.replace(/(\n\n)/gm, '#####');
+      text = text.replace(/(\n)/gm, ' ');
+      text = text.replace(/(#####)/gm, '\r\n');
       const links = text.match(/\bhttps?:\/\/\S+/gi);
       const description = makeDescription(links);
-      const tags = objEmail.subject.split(' / ');
+      const tags = objEmail?.subject?.split(' / ');
       //remove urls
       text = text.replace(
         /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/g,
         ''
       );
       //substitui "Link Patrocinado/Afiliado" por "Link na descrição"
-      text = text.replace('Link Patrocinado (\n\n)', 'Link na descrição!');
-      text = text.replace('Link Afiliado (\n\n)', 'Link na descrição!');
+      text = text.replace('Link Patrocinado (  )', 'Link na descrição!');
+      text = text.replace('Link Afiliado (  )', 'Link na descrição!');
       //adiciona finalização
       text =
         text +
