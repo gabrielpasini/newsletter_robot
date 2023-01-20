@@ -71,29 +71,34 @@ const makeDescription = (links) => {
 };
 
 const formatEmail = (objEmail) => {
-  if (objEmail) {
-    let text = objEmail.conteudo.split('Filipe Deschamps Newsletter')[1];
-    console.log(text);
-    text = text.split('Cancelar inscrição (')[0];
-    const links = text.match(/\bhttps?:\/\/\S+/gi);
-    const description = makeDescription(links);
-    const tags = objEmail.assunto.split(' / ');
-    //remove urls
-    text = text.replace(
-      /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/g,
-      ''
-    );
-    //substitui "Link Patrocinado/Afiliado" por "Link na descrição"
-    text = text.replace('Link Patrocinado ()', 'Link na descrição!');
-    text = text.replace('Link Afiliado ()', 'Link na descrição!');
-    //adiciona finalização
-    text =
-      text +
-      'Este robô foi desenvolvido por Gabriel Pasini!\r\nDeixe o like e se inscreva! Até a próxima!';
-    objEmail.conteudo = text;
-    objEmail.description = description;
-    objEmail.tags = tags;
-    return objEmail;
+  try {
+    if (objEmail) {
+      let text = objEmail.conteudo.includes('Filipe Deschamps Newsletter')
+        ? objEmail.conteudo.split('Filipe Deschamps Newsletter')[1]
+        : objEmail.conteudo;
+      text = text.split('Cancelar inscrição (')[0];
+      const links = text.match(/\bhttps?:\/\/\S+/gi);
+      const description = makeDescription(links);
+      const tags = objEmail.assunto.split(' / ');
+      //remove urls
+      text = text.replace(
+        /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/g,
+        ''
+      );
+      //substitui "Link Patrocinado/Afiliado" por "Link na descrição"
+      text = text.replace('Link Patrocinado (\n\n)', 'Link na descrição!');
+      text = text.replace('Link Afiliado (\n\n)', 'Link na descrição!');
+      //adiciona finalização
+      text =
+        text +
+        'Este robô foi desenvolvido por Gabriel Pasini!\r\nDeixe o like e se inscreva! Até a próxima!';
+      objEmail.conteudo = text;
+      objEmail.description = description;
+      objEmail.tags = tags;
+      return objEmail;
+    }
+  } catch (err) {
+    throw err;
   }
 };
 
