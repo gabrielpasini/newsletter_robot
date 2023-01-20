@@ -98,12 +98,16 @@ const formatEmail = (objEmail) => {
 };
 
 app.post('/format-email', async (req, res) => {
-  const email = req.body;
-  await saveEmail(email);
-  const emailFormated = formatEmail(email);
-  const jsonFile = JSON.stringify(emailFormated, null, 2);
-  fs.writeFileSync('text.json', jsonFile);
-  res.send({ emailFormated });
+  try {
+    const email = req.body;
+    await saveEmail(email);
+    const emailFormated = formatEmail(email);
+    const jsonFile = JSON.stringify(emailFormated, null, 2);
+    fs.writeFileSync('text.json', jsonFile);
+    res.status(200).send({ emailFormated });
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 
 start();
