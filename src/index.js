@@ -68,19 +68,20 @@ const makeDescription = (links) => {
   const desc = `ASSINE A NEWSLETTER GRATUITAMENTE PELO LINK: https://filipedeschamps.com.br/newsletter\r\n\r\n${
     links.length > 0 ? `Links citados no vídeo:\r\n${linkString}` : ''
   }\r\nESTE ROBÔ FOI CRIADO COM O INTUITO DE TESTAR AS TECNOLOGIAS, PROMOVER A NEWSLETTER E DISSEMINAR ESSSAS INFORMAÇÕES FILTRADAS E CONFIÁVEIS DISPONIBILIZADAS NELA GRATUITAMENTE.\r\n\r\nDesenvolvido por Gabriel Pasini: https://pasini.dev`;
+  console.log('> [format-email] Descricao criada');
   return desc;
 };
 
 const formatEmail = (objEmail) => {
   try {
     if (objEmail) {
-      let text = objEmail.conteudo.includes('Filipe Deschamps Newsletter')
-        ? objEmail.conteudo.split('Filipe Deschamps Newsletter')[1]
-        : objEmail.conteudo;
-      text = text.split('Cancelar inscrição (')[0];
+      let text = objEmail?.content?.includes('Filipe Deschamps Newsletter')
+        ? objEmail?.content?.split('Filipe Deschamps Newsletter')[1]
+        : objEmail?.content;
+      text = text?.split('Cancelar inscrição (')[0];
       const links = text.match(/\bhttps?:\/\/\S+/gi);
       const description = makeDescription(links);
-      const tags = objEmail.assunto.split(' / ');
+      const tags = objEmail.subject.split(' / ');
       //remove urls
       text = text.replace(
         /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/g,
@@ -93,26 +94,30 @@ const formatEmail = (objEmail) => {
       text =
         text +
         'Este robô foi desenvolvido por Gabriel Pasini!\r\nDeixe o like e se inscreva! Até a próxima!';
-      objEmail.conteudo = text;
+      objEmail.content = text;
       objEmail.description = description;
       objEmail.tags = tags;
+      console.log('> [format-email] Conteudo formatado com sucesso');
       return objEmail;
     }
   } catch (err) {
+    console.log('> [format-email] Erro ao formatar o conteudo');
     throw err;
   }
 };
 
 app.post('/format-email', async (req, res) => {
   try {
-    const email = JSON.parse(req.body);
+    console.log('> [format-email] Iniciando tratamento do e-mail...');
+    const email = req.body;
     await saveEmail(email);
     const emailFormated = formatEmail(email);
-    // const jsonFile = JSON.stringify(emailFormated, null, 2);
-    // fs.writeFileSync('text.json', jsonFile);
+    const jsonFile = JSON.stringify(emailFormated, null, 2);
+    fs.writeFileSync('text.json', jsonFile);
+    console.log('> [format-email] Conteudo do e-mail salvo com sucesso');
     res.status(200).send({ emailFormated });
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({ error: err });
   }
 });
 
