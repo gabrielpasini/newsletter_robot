@@ -3,7 +3,7 @@ const path = require('path');
 const google = require('googleapis').google;
 const youtube = google.youtube({ version: 'v3' });
 
-const Content = require('../../text.json');
+const email = require('../../email.json');
 const videoFilePath = path.join(__dirname, '../../output.mp4');
 const videoThumbnailFilePath = path.join(__dirname, '../../thumbnail.jpg');
 
@@ -25,9 +25,9 @@ async function setThumbnail(videoInformation) {
 
 async function uploadContent() {
   const videoFileSize = fs.statSync(videoFilePath).size;
-  const videoTitle = Content.subject;
-  const videoTags = Content.tags;
-  const videoDescription = Content.description.toString();
+  const videoTitle = email.subject;
+  const videoTags = email.tags;
+  const videoDescription = email.description.toString();
   const requestParameters = {
     part: 'snippet, status',
     requestBody: {

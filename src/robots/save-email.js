@@ -17,9 +17,9 @@ async function saveEmail(email) {
           '> [persistence-robot] Novo e-mail salvo no banco de dados'
         );
         const jsonFile = JSON.stringify(email, null, 2);
-        fs.writeFileSync('text.json', jsonFile);
+        fs.writeFileSync('email.json', jsonFile);
         console.log(
-          '> [persistence-robot] Novo e-mail salvo no arquivo: text.json'
+          '> [persistence-robot] Novo e-mail salvo no arquivo: email.json'
         );
       }
       return resolve(true);

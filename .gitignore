@@ -23,6 +23,4 @@ npm-debug.log*
 
 *.mp3
 *.mp4
-text.json
 thumbnail.jpg
-tts-credentials.json

@@ -7,7 +7,7 @@ let ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
-const email = require('../../text.json');
+const email = require('../../email.json');
 const originalAudio = 'raw_audio.mp3';
 const acceleratedAudio = 'final_audio.mp3';
 

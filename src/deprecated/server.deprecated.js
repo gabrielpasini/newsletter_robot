@@ -10,7 +10,7 @@ const OAuth2 = google.auth.OAuth2;
 const app = express();
 
 const Email = require('../models/email.js');
-const Content = require('../../text.json');
+const Content = require('../../email.json');
 
 let authCode = '';
 let OAuthClient = '';
@@ -289,7 +289,7 @@ app.get('/show-email', async (req, res) => {
   await gmailRobot(validTokens);
   const emailFormated = formatEmail(email);
   const jsonFile = JSON.stringify(emailFormated, null, 2);
-  fs.writeFileSync('text.json', jsonFile);
+  fs.writeFileSync('email.json', jsonFile);
   res.send(
     `<p><a href="${process.env.BASE_URI}/">Início</a></p><br />${JSON.stringify(
       emailFormated

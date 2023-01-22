@@ -1,7 +1,7 @@
 const textToSpeech = require('@google-cloud/text-to-speech');
 const fs = require('fs');
 const util = require('util');
-const email = require('../../text.json');
+const email = require('../../email.json');
 
 const client = new textToSpeech.TextToSpeechClient();
 
