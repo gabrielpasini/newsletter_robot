@@ -1,8 +1,7 @@
 const textToSpeech = require('@google-cloud/text-to-speech');
 const fs = require('fs');
 const util = require('util');
-const renderVideo = require('./render-video');
-const email = require('../text.json');
+const email = require('../../text.json');
 
 const client = new textToSpeech.TextToSpeechClient();
 
@@ -28,5 +27,4 @@ const client = new textToSpeech.TextToSpeechClient();
   const writeFile = util.promisify(fs.writeFile);
   await writeFile(`audio.mp3`, response.audioContent, 'binary');
   console.log(`> [mp3-robot] Audio exportado no arquivo: audio.mp3`);
-  await renderVideo();
 })();
