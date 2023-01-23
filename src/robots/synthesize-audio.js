@@ -23,9 +23,10 @@ async function editAudio() {
       .save(acceleratedAudio);
 
     command
-      .on('error', ({ message }) =>
-        errorLog(`> [audio-robot] Erro ao editar o audio: ${message}`)
-      )
+      .on('error', ({ message }) => {
+        console.error(`> [audio-robot] Erro ao editar o audio: ${message}`);
+        errorLog(`> [audio-robot] Erro ao editar o audio: ${message}`);
+      })
       .on('progress', ({ targetSize }) =>
         console.log(`> [audio-robot] Processando edicao: ${targetSize}kB`)
       )
@@ -35,6 +36,7 @@ async function editAudio() {
         );
         fs.unlink(originalAudio, (err) => {
           if (err) {
+            console.error('> [audio-robot] Erro au deletar a amostra de audio');
             errorLog('> [audio-robot] Erro au deletar a amostra de audio');
             throw new Error(err);
           }

@@ -9,6 +9,9 @@ async function saveEmail(email) {
     try {
       const savedEmail = await EmailModel.findOne({ id: email.id });
       if (savedEmail) {
+        console.error(
+          '> [persistence-robot] Este e-mail ja esta salvo! Tente novamente no proximo dia util...'
+        );
         errorLog(
           '> [persistence-robot] Este e-mail ja esta salvo! Tente novamente no proximo dia util...'
         );
@@ -26,6 +29,9 @@ async function saveEmail(email) {
       }
       return resolve(true);
     } catch (err) {
+      console.error(
+        '> [persistence-robot] Erro ao salvar/atualizar o email: ' + err
+      );
       errorLog(
         '> [persistence-robot] Erro ao salvar/atualizar o email: ' + err
       );

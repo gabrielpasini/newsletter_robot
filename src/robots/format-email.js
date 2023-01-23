@@ -43,6 +43,7 @@ function formatEmail(objEmail) {
       return objEmail;
     }
   } catch (err) {
+    console.error('> [formatter-robot] Erro ao formatar o conteudo: ' + err);
     errorLog('> [formatter-robot] Erro ao formatar o conteudo: ' + err);
     throw err;
   }

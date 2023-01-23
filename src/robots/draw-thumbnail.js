@@ -48,6 +48,7 @@ async function drawThumbnail() {
         return resolve();
       });
     } catch (err) {
+      console.error(`> [thumbnail-robot] Erro na geracao da thumbnail: ${err}`);
       errorLog(`> [thumbnail-robot] Erro na geracao da thumbnail: ${err}`);
       reject(err);
     }

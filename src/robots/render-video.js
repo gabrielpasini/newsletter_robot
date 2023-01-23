@@ -63,6 +63,7 @@ async function renderVideo() {
           console.log('> [video-robot] Criando video...');
         })
         .on('error', (err, stdout, stderr) => {
+          console.error('> [video-robot] Erro ao criar o video: ' + err);
           errorLog('> [video-robot] Erro ao criar o video: ' + err);
           reject(err);
         })
@@ -81,6 +82,7 @@ async function renderVideo() {
           resolve();
         });
     } catch (err) {
+      console.error('> [video-robot] Erro ao criar o video: ' + err);
       errorLog('> [video-robot] Erro ao criar o video: ' + err);
       reject(err);
     }

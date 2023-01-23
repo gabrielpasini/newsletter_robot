@@ -24,6 +24,7 @@ function connectToDatabase() {
     mongoose.connect(process.env.MONGO_DB);
     console.log('> [database] Conectado ao banco de dados');
   } catch (err) {
+    console.error('> [database] Erro ao se conectar ao banco de dados: ' + err);
     errorLog('> [database] Erro ao se conectar ao banco de dados: ' + err);
   }
 }

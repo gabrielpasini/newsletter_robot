@@ -15,7 +15,10 @@ let youtubeAuthenticatedClient = null;
 async function requestGoogleForAccessTokens() {
   return await new Promise(async (resolve, reject) => {
     await OAuthClient.getToken(authCode, async (error, tokens) => {
-      if (error) errorLog('> [auth-robot] Erro ao pegar o token: ' + error);
+      if (error) {
+        console.error('> [auth-robot] Erro ao pegar o token: ' + error);
+        errorLog('> [auth-robot] Erro ao pegar o token: ' + error);
+      }
       await OAuthClient.setCredentials(tokens);
       resolve();
     });
@@ -80,6 +83,7 @@ async function thread() {
       `> [thread] Finalizado! Video disponível em: https://youtu.be/${videoId}`
     );
   } catch (err) {
+    console.error(`> [thread] Erro na thread: ${err}`);
     errorLog(`> [thread] Erro na thread: ${err}`);
   }
 }
