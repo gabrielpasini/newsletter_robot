@@ -6,7 +6,7 @@ const thread = require('./thread.js');
 const { errorLog } = require('./webhooks.js');
 
 const formatEmail = require('./robots/format-email.js');
-const saveEmail = require('./robots/save-email.js');
+const { saveEmail } = require('./robots/save-email.js');
 
 const EmailModel = require('./models/email.js');
 

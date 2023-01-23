@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const email = require('../../email.json');
+const { getRecentEmail } = require('./save-email.js');
+
 const videoFilePath = path.join(__dirname, '../../output.mp4');
 const videoThumbnailFilePath = path.join(__dirname, '../../thumbnail.jpg');
 
@@ -21,6 +22,8 @@ async function setThumbnail(videoId, youtube) {
 
 async function uploadContent(youtube) {
   console.log('> [youtube-robot] Iniciando upload do video para o YouTube...');
+  const email = await getRecentEmail();
+
   const videoFileSize = fs.statSync(videoFilePath).size;
   const videoTitle = email.subject;
   const videoTags = email.tags;

@@ -4,6 +4,27 @@ const { errorLog } = require('../webhooks.js');
 
 const EmailModel = require('../models/email.js');
 
+async function getRecentEmail() {
+  return await new Promise(async (resolve, reject) => {
+    try {
+      const storedDBEmail = await EmailModel.findOne().sort('-created_at');
+      if (!storedDBEmail) return reject();
+      console.log(
+        '> [persistence-robot] Email mais recente carregado com sucesso'
+      );
+      return resolve(storedDBEmail);
+    } catch (err) {
+      console.error(
+        '> [persistence-robot] Erro ao buscar o ultimo email: ' + err
+      );
+      errorLog(
+        '> [persistence-robot] Erro ao salvar/atualizar o email: ' + err
+      );
+      return reject();
+    }
+  });
+}
+
 async function saveEmail(email) {
   return await new Promise(async (resolve, reject) => {
     try {
@@ -21,11 +42,6 @@ async function saveEmail(email) {
         console.log(
           '> [persistence-robot] Novo e-mail salvo no banco de dados'
         );
-        const jsonFile = JSON.stringify(email, null, 2);
-        fs.writeFileSync('email.json', jsonFile);
-        console.log(
-          '> [persistence-robot] Novo e-mail salvo no arquivo: email.json'
-        );
       }
       return resolve(true);
     } catch (err) {
@@ -40,4 +56,4 @@ async function saveEmail(email) {
   });
 }
 
-module.exports = saveEmail;
+module.exports = { saveEmail, getRecentEmail };

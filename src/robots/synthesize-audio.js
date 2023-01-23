@@ -8,8 +8,8 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
 const { errorLog } = require('../webhooks.js');
+const { getRecentEmail } = require('./save-email.js');
 
-const email = require('../../email.json');
 const originalAudio = 'raw_audio.mp3';
 const acceleratedAudio = 'final_audio.mp3';
 
@@ -48,7 +48,9 @@ async function editAudio() {
 }
 
 async function synthesizeAudio() {
-  return await new Promise((resolve, reject) => {
+  return await new Promise(async (resolve, reject) => {
+    const email = await getRecentEmail();
+
     const gtts = new gTTS(email.formattedContent, 'pt-br');
     console.log('> [audio-robot] Criando arquivo de audio...');
     gtts.save(originalAudio, (err, result) => {
