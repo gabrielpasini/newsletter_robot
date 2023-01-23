@@ -54,6 +54,25 @@ app.get('/start', async (req, res) => {
   }
 });
 
+app.get('/retry', async (req, res) => {
+  try {
+    console.log(
+      '> [server] Reiniciando criacao de conteudo a partir do ultimo e-mail salvo...'
+    );
+    thread();
+    console.log(
+      '> [server] Gerando o conteudo de audio, video, thumbnail, realizando o upload para o youtube e em breve estara disponivel...'
+    );
+    return res
+      .status(200)
+      .send(
+        `Gerando o conteudo de audio, video, thumbnail, realizando o upload para o youtube e em breve estara disponivel...`
+      );
+  } catch (err) {
+    return res.status(400).send({ error: err });
+  }
+});
+
 app.get('/', async (req, res) => {
   try {
     const { id } = req.query;

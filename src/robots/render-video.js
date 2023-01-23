@@ -71,7 +71,7 @@ async function renderVideo() {
           (progress) =>
             progress.percent < 100 &&
             console.log(
-              `> [audio-robot] Processando edicao: ${progress.percent.toFixed(
+              `> [video-robot] Processando edicao: ${progress.percent.toFixed(
                 2
               )}%`
             )

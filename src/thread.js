@@ -70,19 +70,17 @@ async function authUser() {
 
 async function thread() {
   try {
-    console.log(
-      '> [worker-thread] Iniciando thread de geracao dos arquivos...'
-    );
+    console.log('> [thread] Iniciando thread de geracao dos arquivos...');
     await synthesizeAudio();
     await renderVideo();
     await drawThumbnail();
     await authUser();
     const videoId = await uploadContent(youtubeAuthenticatedClient);
     console.log(
-      `> [worker-thread] Finalizado! Video disponível em: https://youtu.be/${videoId}`
+      `> [thread] Finalizado! Video disponível em: https://youtu.be/${videoId}`
     );
   } catch (err) {
-    errorLog(`> [worker-thread] Erro na thread: ${err}`);
+    errorLog(`> [thread] Erro na thread: ${err}`);
   }
 }
 
