@@ -1,3 +1,5 @@
+const { errorLog } = require('../webhooks.js');
+
 function makeDescription(links) {
   let linkString = '';
   links.map((link) => (linkString = linkString + link + '\r\n'));
@@ -40,7 +42,7 @@ function formatEmail(objEmail) {
       return objEmail;
     }
   } catch (err) {
-    console.log('> [formatter-robot] Erro ao formatar o conteudo:' + err);
+    errorLog('> [formatter-robot] Erro ao formatar o conteudo: ' + err);
     throw err;
   }
 }

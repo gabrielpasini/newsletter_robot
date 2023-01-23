@@ -4,6 +4,8 @@ const videoshow = require('videoshow');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffprobePath = require('@ffprobe-installer/ffprobe').path;
 
+const { errorLog } = require('../webhooks.js');
+
 const imageStart = path.join(__dirname, '../../image-start.jpg');
 const imageEnd = path.join(__dirname, '../../image-end.jpg');
 const image = path.join(__dirname, '../../image.jpg');
@@ -14,7 +16,7 @@ let ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
-async function createVideo() {
+async function renderVideo() {
   return await new Promise((resolve, reject) => {
     try {
       console.log('> [video-robot] Iniciando renderizacao...');
@@ -61,7 +63,7 @@ async function createVideo() {
           console.log('> [video-robot] Criando video...');
         })
         .on('error', (err, stdout, stderr) => {
-          console.log('> [video-robot] Erro ao criar o video: ' + err);
+          errorLog('> [video-robot] Erro ao criar o video: ' + err);
           reject(err);
         })
         .on(
@@ -79,10 +81,10 @@ async function createVideo() {
           resolve();
         });
     } catch (err) {
-      console.log('> [video-robot] Erro ao criar o video: ' + err);
+      errorLog('> [video-robot] Erro ao criar o video: ' + err);
       reject(err);
     }
   });
 }
 
-module.exports = createVideo;
+module.exports = renderVideo;

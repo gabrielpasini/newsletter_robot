@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const { errorLog } = require('../webhooks.js');
+
 const EmailModel = require('../models/email.js');
 
 async function saveEmail(email) {
@@ -7,7 +9,7 @@ async function saveEmail(email) {
     try {
       const savedEmail = await EmailModel.findOne({ id: email.id });
       if (savedEmail) {
-        console.log(
+        errorLog(
           '> [persistence-robot] Este e-mail ja esta salvo! Tente novamente no proximo dia util...'
         );
         return resolve(false);
@@ -24,7 +26,7 @@ async function saveEmail(email) {
       }
       return resolve(true);
     } catch (err) {
-      console.log(
+      errorLog(
         '> [persistence-robot] Erro ao salvar/atualizar o email: ' + err
       );
       return reject(true);

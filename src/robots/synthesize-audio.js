@@ -7,6 +7,8 @@ let ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
+const { errorLog } = require('../webhooks.js');
+
 const email = require('../../email.json');
 const originalAudio = 'raw_audio.mp3';
 const acceleratedAudio = 'final_audio.mp3';
@@ -22,9 +24,7 @@ async function editAudio() {
 
     command
       .on('error', ({ message }) =>
-        console.log(
-          `> [audio-robot] Ocorreu um erro ao editar o audio: ${message}`
-        )
+        errorLog(`> [audio-robot] Erro ao editar o audio: ${message}`)
       )
       .on('progress', ({ targetSize }) =>
         console.log(`> [audio-robot] Processando edicao: ${targetSize}kB`)
@@ -34,7 +34,10 @@ async function editAudio() {
           `> [audio-robot] Audio final gerado no arquivo: ${acceleratedAudio}`
         );
         fs.unlink(originalAudio, (err) => {
-          if (err) throw new Error(err);
+          if (err) {
+            errorLog('> [audio-robot] Erro au deletar a amostra de audio');
+            throw new Error(err);
+          }
           resolve();
           console.log('> [audio-robot] Amostra de audio deletada com sucesso');
         });
@@ -42,7 +45,7 @@ async function editAudio() {
   });
 }
 
-async function createAudio() {
+async function synthesizeAudio() {
   return await new Promise((resolve, reject) => {
     const gtts = new gTTS(email.formattedContent, 'pt-br');
     console.log('> [audio-robot] Criando arquivo de audio...');
@@ -56,4 +59,4 @@ async function createAudio() {
   });
 }
 
-module.exports = createAudio;
+module.exports = synthesizeAudio;

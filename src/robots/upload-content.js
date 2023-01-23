@@ -1,16 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const google = require('googleapis').google;
-const youtube = google.youtube({ version: 'v3' });
 
 const email = require('../../email.json');
 const videoFilePath = path.join(__dirname, '../../output.mp4');
 const videoThumbnailFilePath = path.join(__dirname, '../../thumbnail.jpg');
 
-async function setThumbnail(videoInformation) {
+async function setThumbnail(videoId, youtube) {
   console.log(`> [youtube-robot] Iniciando upload da thumbnail`);
-
-  const videoId = videoInformation.id;
   const requestParameters = {
     videoId: videoId,
     media: {
@@ -23,7 +19,8 @@ async function setThumbnail(videoInformation) {
   return videoId;
 }
 
-async function uploadContent() {
+async function uploadContent(youtube) {
+  console.log('> [youtube-robot] Iniciando upload do video para o YouTube...');
   const videoFileSize = fs.statSync(videoFilePath).size;
   const videoTitle = email.subject;
   const videoTags = email.tags;
@@ -35,25 +32,30 @@ async function uploadContent() {
         title: videoTitle,
         description: videoDescription,
         tags: videoTags,
+        categoryId: 28, // ScienceTechnology
+        defaultLanguage: 'pt-br',
+        defaultAudioLanguage: 'pt-br',
       },
       status: {
-        privacyStatus: 'unlisted',
+        privacyStatus: 'private',
       },
     },
     media: {
       body: fs.createReadStream(videoFilePath),
     },
   };
-  console.log('> [youtube-robot] Iniciando upload do video para o YouTube...');
-  const onUploadProgress = (event) => {
-    const progress = Math.round((event.bytesRead / videoFileSize) * 100);
-    console.log(`> [youtube-robot] Fazendo upload: ${progress}%`);
-  };
-  const youtubeResponse = await youtube.videos.insert(requestParameters, {
-    onUploadProgress: onUploadProgress,
+  const {
+    data: { id },
+  } = await youtube.videos.insert(requestParameters, {
+    onUploadProgress: (event) =>
+      console.log(
+        `> [youtube-robot] Fazendo upload: ${Math.round(
+          (event.bytesRead / videoFileSize) * 100
+        )}%`
+      ),
   });
   console.log(`> [youtube-robot] Upload completo`);
-  return setThumbnail(youtubeResponse.data);
+  return setThumbnail(id, youtube);
 }
 
 module.exports = uploadContent;
