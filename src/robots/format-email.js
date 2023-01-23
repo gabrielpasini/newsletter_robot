@@ -31,6 +31,7 @@ function formatEmail(objEmail) {
       //substitui "Link Patrocinado/Afiliado" por "Link na descrição"
       text = text.replace('Link Patrocinado (  )', 'Link na descrição!');
       text = text.replace('Link Afiliado (  )', 'Link na descrição!');
+      text = text.replace('Link do Vídeo (  )', 'Link na descrição!');
       //adiciona finalização
       text =
         text +
