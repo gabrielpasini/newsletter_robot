@@ -7,7 +7,7 @@ const EmailModel = require('../models/email.js');
 async function getRecentEmail() {
   return await new Promise(async (resolve, reject) => {
     try {
-      const storedDBEmail = await EmailModel.findOne().sort('-created_at');
+      const storedDBEmail = await EmailModel.findOne().sort('-createdAt');
       if (!storedDBEmail) return reject();
       console.log(
         '> [persistence-robot] Email mais recente carregado com sucesso'

@@ -19,6 +19,10 @@ const EmailSchema = new mongoose.Schema({
   tags: {
     type: Array,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Email = mongoose.model('Email', EmailSchema);
