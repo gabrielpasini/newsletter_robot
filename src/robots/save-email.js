@@ -40,7 +40,7 @@ async function addVideoIdToEmail(emailId, videoId) {
         },
       }
     );
-    console.log('> [persistence-robot] Novo e-mail salvo no banco de dados');
+    console.log('> [persistence-robot] videoId incluido no email salvo');
   } catch (err) {
     console.error(
       '> [persistence-robot] Erro ao atualizar o videoId no email: ' + err
