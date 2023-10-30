@@ -1,14 +1,15 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
+const path = require('path');
 
 const app = require('./app.js');
 const thread = require('./thread.js');
 const { errorLog } = require('./webhooks.js');
 
-const formatEmail = require('./robots/format-email.js');
-const { saveEmail } = require('./robots/save-email.js');
-
 const EmailModel = require('./models/email.js');
+
+const videoFilePath = path.join(__dirname, '../output.mp4');
+const videoThumbnailFilePath = path.join(__dirname, '../thumbnail.jpg');
 
 async function startWebServer() {
   return await new Promise((resolve, reject) => {
@@ -37,19 +38,8 @@ async function execute() {
 app.get('/start', async (req, res) => {
   try {
     console.log('> [server] Iniciando criacao de conteudo...');
-    const email = req.body;
-    const emailFormated = formatEmail(email);
-    const newEmail = await saveEmail(emailFormated);
-    if (!newEmail) return res.status(400).send('Este e-mail ja foi utilizado');
-    thread();
-    console.log(
-      '> [server] Gerando o conteudo de audio, video, thumbnail, realizando o upload para o youtube e em breve estara disponivel...'
-    );
-    return res
-      .status(200)
-      .send(
-        `Gerando o conteudo de audio, video, thumbnail, realizando o upload para o youtube e em breve estara disponivel...`
-      );
+    thread(req.route.path);
+    return res.status(200).send(`Iniciando criacao de conteudo...`);
   } catch (err) {
     return res.status(400).send({ error: err });
   }
@@ -60,14 +50,11 @@ app.get('/retry', async (req, res) => {
     console.log(
       '> [server] Reiniciando criacao de conteudo a partir do ultimo e-mail salvo...'
     );
-    thread();
-    console.log(
-      '> [server] Gerando o conteudo de audio, video, thumbnail, realizando o upload para o youtube e em breve estara disponivel...'
-    );
+    thread(req.route.path);
     return res
       .status(200)
       .send(
-        `Gerando o conteudo de audio, video, thumbnail, realizando o upload para o youtube e em breve estara disponivel...`
+        `Reiniciando criacao de conteudo a partir do ultimo e-mail salvo...`
       );
   } catch (err) {
     return res.status(400).send({ error: err });
@@ -77,26 +64,24 @@ app.get('/retry', async (req, res) => {
 app.get('/', async (req, res) => {
   try {
     const { id } = req.query;
-    if (id) {
-      const savedEmail = await EmailModel.findOne({ id });
-      if (savedEmail)
-        return res.send(
-          `<head><title>Notícias de tecnologia</title></head><h1>${
-            savedEmail.subject
-          }</h1><h2><pre>${
-            savedEmail.content.split('Cancelar inscrição (')[0]
-          }</pre><h2>`
-        );
+    const savedEmail = id
+      ? await EmailModel.findOne({ id })
+      : await EmailModel.findOne();
+    if (!id) {
+      return res.redirect(`?id=${savedEmail?.id}`);
+    }
+    if (savedEmail) {
       return res.send(
-        `<head><title>Notícias de tecnologia</title></head><h1>Notícias de tecnologia - Deschamps Newsletter</h1><h2>Notícia não encontrada, insira um ID válido!<h2>`
+        `<head><title>Notícias de tecnologia</title></head><iframe src="https://www.youtube.com/embed/${savedEmail?.videoId}" width="640" height="360" frameborder="0"></iframe><h1>${savedEmail?.subject}</h1><h2><pre>${savedEmail?.formattedContent}</pre></h2>`
       );
-    } else {
+    } else if (!savedEmail && id) {
       return res.send(
-        `<head><title>Notícias de tecnologia</title></head><h1>Notícias de tecnologia - Deschamps Newsletter</h1><h2>Adicione um ID válido na URL para buscar pela notícia!<h2>`
+        `<head><title>Notícias de tecnologia</title></head><h1>Notícias de tecnologia</h1><h2>Notícia não encontrada, insira um ID válido ou tente novamente mais tarde...<h2>`
       );
     }
   } catch (err) {
-    return res.status(400).send({ error: err });
+    console.error(err);
+    return res.status(400).send(err);
   }
 });
 

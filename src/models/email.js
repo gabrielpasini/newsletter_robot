@@ -19,6 +19,9 @@ const EmailSchema = new mongoose.Schema({
   tags: {
     type: Array,
   },
+  videoId: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

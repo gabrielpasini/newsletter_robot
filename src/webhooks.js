@@ -10,8 +10,15 @@ async function authWebhook(content) {
 async function errorLog(content) {
   return await axios.post(
     'https://discord.com/api/webhooks/1066977872914415627/8oGRFuEsW6kwLZBljDKSMN7MoA526cKAEC6rY1DJ1eegsgzBFCnHxd8Za8JLOJOX0pzl',
+    { content: '```' + content + '```' }
+  );
+}
+
+async function successMessage(content) {
+  return await axios.post(
+    'https://discord.com/api/webhooks/1168643651405090817/2ryYvjlilIsfYtRsfFvePZeQ-pR-LtnUYDmyfmTB6gCcdpxwvk4iorBSEsNQq5_BKcQf',
     { content }
   );
 }
 
-module.exports = { authWebhook, errorLog };
+module.exports = { authWebhook, errorLog, successMessage };

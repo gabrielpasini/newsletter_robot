@@ -8,7 +8,7 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
 const { errorLog } = require('../webhooks.js');
-const { getRecentEmail } = require('./save-email.js');
+const { getRecentEmail } = require('./get-email.js');
 
 const originalAudio = 'raw_audio.mp3';
 const acceleratedAudio = 'final_audio.mp3';

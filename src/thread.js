@@ -2,15 +2,21 @@ const google = require('googleapis').google;
 const OAuth2 = google.auth.OAuth2;
 
 const app = require('./app.js');
-const { authWebhook, errorLog } = require('./webhooks.js');
+const { authWebhook, errorLog, successMessage } = require('./webhooks.js');
+const { getEmailFromGmail } = require('./robots/get-email.js');
 const synthesizeAudio = require('./robots/synthesize-audio.js');
 const renderVideo = require('./robots/render-video.js');
 const drawThumbnail = require('./robots/draw-thumbnail.js');
 const uploadContent = require('./robots/upload-content.js');
+const formatEmail = require('./robots/format-email.js');
+const { saveEmail, addVideoIdToEmail } = require('./robots/save-email.js');
 
 let authCode = '';
 let OAuthClient = '';
+let route = '';
 let youtubeAuthenticatedClient = null;
+let validTokens = null;
+let date = null;
 
 async function requestGoogleForAccessTokens() {
   return await new Promise(async (resolve, reject) => {
@@ -20,7 +26,7 @@ async function requestGoogleForAccessTokens() {
         errorLog('> [auth-robot] Erro ao pegar o token: ' + error);
       }
       await OAuthClient.setCredentials(tokens);
-      resolve();
+      resolve(tokens);
     });
   });
 }
@@ -44,12 +50,17 @@ async function requestUserConsent(client) {
   const consentUrl = client.generateAuthUrl({
     access_type: 'offline',
     scope: [
+      'https://mail.google.com/',
+      'https://www.googleapis.com/auth/gmail.modify',
+      'https://www.googleapis.com/auth/gmail.readonly',
       'https://www.googleapis.com/auth/youtube',
       'https://www.googleapis.com/auth/youtube.upload',
     ],
   });
   console.log(`> [auth-robot] Abrindo a tela de consentimento: ${consentUrl}`);
-  await authWebhook(consentUrl);
+  await authWebhook(
+    `***${date.toLocaleTimeString()}*** disponível em: ${consentUrl}`
+  );
 }
 
 function waitForAuthenticationCompleted() {
@@ -71,33 +82,64 @@ async function authUser() {
   await waitForAuthenticationCompleted();
 }
 
-async function thread() {
+async function thread(newRoute) {
+  route = newRoute;
+  date = new Date();
   try {
     console.log('> [thread] Iniciando thread de geracao dos arquivos...');
-    await synthesizeAudio();
-    await renderVideo();
-    await drawThumbnail();
+    validTokens = '';
     await authUser();
-    const videoId = await uploadContent(youtubeAuthenticatedClient);
-    console.log(
-      `> [thread] Finalizado! Video disponível em: https://youtu.be/${videoId}`
-    );
   } catch (err) {
     console.error(`> [thread] Erro na thread: ${err}`);
     errorLog(`> [thread] Erro na thread: ${err}`);
   }
 }
 
-app.get('/oauth2callback', async (req, res) => {
-  authCode = req.query.code;
-  console.log(`> [auth-robot] Código de autenticação: ${authCode}`);
-  await requestGoogleForAccessTokens();
-  const googleAuthenticatedClient = await setGlobalGoogleAuthentication();
-  youtubeAuthenticatedClient = googleAuthenticatedClient.youtube({
-    version: 'v3',
-  });
+async function runRots() {
+  try {
+    console.log(
+      `> [bots] Gerando o conteudo de audio, video, thumbnail, realizando o upload para o youtube e em breve estara disponivel...`
+    );
+    const email = await getEmailFromGmail(validTokens);
+    const emailFormated = formatEmail(email);
+    const isNewEmail = await saveEmail(emailFormated);
+    if (!isNewEmail && route === '/start') {
+      throw new Error('Este e-mail ja foi utilizado');
+    }
+    await synthesizeAudio();
+    await renderVideo();
+    await drawThumbnail();
+    const videoId = await uploadContent(youtubeAuthenticatedClient);
+    const fullDate = date.toLocaleDateString();
+    successMessage(
+      `Video do dia ***${fullDate}*** prontinho e disponível em: https://youtu.be/${videoId}`
+    );
+    console.log(
+      `> [bots] Finalizado! Video do dia ${fullDate} prontinho e disponível em: https://youtu.be/${videoId}`
+    );
+    await addVideoIdToEmail(email.id, videoId);
+  } catch (err) {
+    console.error(`> [bots] Erro em algum robô: ${err}`);
+    errorLog(`> [bots] Erro em algum robô: ${err}`);
+  }
+}
 
-  res.send('Usuario autenticado');
+app.get('/oauth2callback', async (req, res) => {
+  try {
+    authCode = req.query.code;
+    console.log(`> [auth-robot] Código de autenticação: ${authCode}`);
+    validTokens = await requestGoogleForAccessTokens();
+    const googleAuthenticatedClient = await setGlobalGoogleAuthentication();
+    youtubeAuthenticatedClient = googleAuthenticatedClient.youtube({
+      version: 'v3',
+    });
+
+    runRots();
+    res.send('Usuario autenticado');
+  } catch (err) {
+    console.error(`> [auth-robot] Erro no robô de autenticação: ${err}`);
+    errorLog(`> [auth-robot] Erro no robô de autenticação: ${err}`);
+  }
 });
 
 module.exports = thread;

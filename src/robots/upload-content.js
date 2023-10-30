@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { getRecentEmail } = require('./save-email.js');
+const { getRecentEmail } = require('./get-email.js');
 
 const videoFilePath = path.join(__dirname, '../../output.mp4');
 const videoThumbnailFilePath = path.join(__dirname, '../../thumbnail.jpg');
@@ -40,7 +40,7 @@ async function uploadContent(youtube) {
         defaultAudioLanguage: 'pt-br',
       },
       status: {
-        privacyStatus: 'private',
+        privacyStatus: 'public', // private, public
       },
     },
     media: {
