@@ -59,7 +59,7 @@ async function requestUserConsent(client) {
   });
   console.log(`> [auth-robot] Abrindo a tela de consentimento: ${consentUrl}`);
   await authWebhook(
-    `***${date.toLocaleTimeString()}*** disponível em: ${consentUrl}`
+    `***${date.toLocaleTimeString('pt-BR')}*** disponível em: ${consentUrl}`
   );
 }
 
@@ -110,7 +110,7 @@ async function runRots() {
     await renderVideo();
     await drawThumbnail();
     const videoId = await uploadContent(youtubeAuthenticatedClient);
-    const fullDate = date.toLocaleDateString();
+    const fullDate = date.toLocaleDateString('pt-BR');
     successMessage(
       `Video do dia ***${fullDate}*** prontinho e disponível em: https://youtu.be/${videoId}`
     );

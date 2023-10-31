@@ -30,7 +30,7 @@ async function drawThumbnail() {
       ctx.fillStyle = '#fff';
       ctx.font = 'bold 120px Courier New';
       ctx.textAlign = 'center';
-      ctx.fillText(date.toLocaleDateString(), 640, 140);
+      ctx.fillText(date.toLocaleDateString('pt-BR'), 640, 140);
       ctx.font = 'bold 160px Courier New';
       ctx.fillText(semana[date.getDay()].toUpperCase(), 640, 300);
       ctx.font = 'bold 100px Courier New';
