@@ -32,6 +32,8 @@ function formatEmail(objEmail) {
       text = text.replace(/Link Patrocinado \([^()]*\)/g, 'Link na descrição!');
       text = text.replace(/Link Afiliado \([^()]*\)/g, 'Link na descrição!');
       text = text.replace(/Link do Vídeo \([^()]*\)/g, 'Link na descrição!');
+      text = text.replace(/Link do Curso \([^()]*\)/g, 'Link na descrição!');
+      text = text.replace(/Link do Evento \([^()]*\)/g, 'Link na descrição!');
       //adiciona finalização
       text =
         text +

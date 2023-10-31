@@ -22,5 +22,7 @@
 npm-debug.log*
 
 thumbnail.jpg
+/ssl_backup
+*.pem
 *.mp3
 *.mp4
