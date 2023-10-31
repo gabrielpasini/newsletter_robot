@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const path = require('path');
+const https = require('https');
+const fs = require('fs');
 
 const app = require('./app.js');
 const thread = require('./thread.js');
@@ -8,15 +9,20 @@ const { errorLog } = require('./webhooks.js');
 
 const EmailModel = require('./models/email.js');
 
-const videoFilePath = path.join(__dirname, '../output.mp4');
-const videoThumbnailFilePath = path.join(__dirname, '../thumbnail.jpg');
-
 async function startWebServer() {
   return await new Promise((resolve, reject) => {
-    app.listen(process.env.PORT, () => {
-      console.log(`> [server] Rodando servidor em ${process.env.BASE_URI}`);
-      resolve();
-    });
+    https
+      .createServer(
+        {
+          key: fs.readFileSync('key.pem'),
+          cert: fs.readFileSync('cert.pem'),
+        },
+        app
+      )
+      .listen(process.env.PORT, () => {
+        console.log(`> [server] Rodando servidor em ${process.env.BASE_URI}`);
+        resolve();
+      });
   });
 }
 
