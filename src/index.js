@@ -14,7 +14,7 @@ async function startWebServer() {
     https
       .createServer(
         {
-          key: fs.readFileSync('key.pem'),
+          key: fs.readFileSync('privkey.pem'),
           cert: fs.readFileSync('cert.pem'),
         },
         app
