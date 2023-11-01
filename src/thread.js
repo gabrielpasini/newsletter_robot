@@ -108,7 +108,7 @@ async function runRots() {
     }
     await synthesizeAudio();
     await renderVideo();
-    await drawThumbnail();
+    await drawThumbnail(date);
     const videoId = await uploadContent(youtubeAuthenticatedClient);
     const fullDate = date.toLocaleDateString('pt-BR');
     successMessage(

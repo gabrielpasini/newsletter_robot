@@ -7,7 +7,6 @@ const { errorLog } = require('../webhooks.js');
 
 const background = path.join(__dirname, '../../background.jpg');
 
-const date = new Date();
 const semana = [
   'Domingo',
   'Segunda-Feira',
@@ -18,7 +17,7 @@ const semana = [
   'Sábado',
 ];
 
-async function drawThumbnail() {
+async function drawThumbnail(date) {
   return await new Promise((resolve, reject) => {
     try {
       console.log('> [thumbnail-robot] Iniciando Canvas...');
