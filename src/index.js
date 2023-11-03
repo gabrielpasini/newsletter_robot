@@ -73,7 +73,7 @@ app.get('/', async (req, res) => {
     const { id } = req.query;
     const savedEmail = id
       ? await EmailModel.findOne({ id })
-      : await EmailModel.findOne();
+      : await EmailModel.findOne().sort({ createdAt: -1 });
     if (!id) {
       return res.redirect(`?id=${savedEmail?.id}`);
     }
