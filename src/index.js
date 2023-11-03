@@ -6,6 +6,7 @@ const fs = require('fs');
 const app = require('./app.js');
 const thread = require('./thread.js');
 const { errorLog } = require('./webhooks.js');
+const drawThumbnail = require('./robots/draw-thumbnail.js');
 
 const EmailModel = require('./models/email.js');
 
@@ -88,6 +89,16 @@ app.get('/', async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(400).send(err);
+  }
+});
+
+app.get('/draw-thumb', async (req, res) => {
+  const date = new Date();
+  try {
+    drawThumbnail(date);
+    return res.status(200).send(`Gerando thumbnail atualizada...`);
+  } catch (err) {
+    return res.status(400).send({ error: err });
   }
 });
 
