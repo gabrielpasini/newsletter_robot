@@ -4,7 +4,7 @@ Robô criado em NodeJS para buscar o último e-mail recebido da Newsletter do Fi
 
 ### >> Configurando arquivos necessários para rodar o projeto...
 
-- `privkey.pem` e `cert.pem` utilizados apenas para rodar o servidor em https com certificado SSL. Caso prefira rodá-lo localmente com http mesmo, é só alterar o seguinte trecho de código no arquivo `src/index.js`:
+- `privkey.pem` e `cert.pem` são utilizados apenas para rodar o servidor em https com certificado SSL. Caso prefira rodá-lo localmente com http mesmo, é só alterar o seguinte trecho de código no arquivo `src/index.js`:
 
   HTTPS:
 
@@ -55,7 +55,7 @@ Robô criado em NodeJS para buscar o último e-mail recebido da Newsletter do Fi
   ```
   Para criar suas chaves da API do google, basta seguir [este tutorial](https://developers.google.com/identity/protocols/oauth2/web-server?hl=pt-br);
 
-  No meu caso, criei webhooks em um servidor do Discord, é super fácil e você pode aprender [neste tutorial](https://support.discord.com/hc/pt-br/articles/228383668);
+  Para os Webhooks, criei eles em um servidor do Discord, é super fácil e você pode aprender [neste tutorial](https://support.discord.com/hc/pt-br/articles/228383668);
 
 ### >> Agora que seu projeto já está rodando, precisamos entender as rotas...
 
