@@ -7,6 +7,7 @@ const app = require('./app.js');
 const thread = require('./thread.js');
 const { errorLog } = require('./webhooks.js');
 const drawThumbnail = require('./robots/draw-thumbnail.js');
+const formatEmail = require('./robots/format-email.js');
 
 const EmailModel = require('./models/email.js');
 
@@ -97,6 +98,20 @@ app.get('/draw-thumb', async (req, res) => {
   try {
     drawThumbnail(date);
     return res.status(200).send(`Gerando thumbnail atualizada...`);
+  } catch (err) {
+    return res.status(400).send({ error: err });
+  }
+});
+
+app.get('/format-email', async (req, res) => {
+  try {
+    const { id } = req.query;
+    const savedEmail = id
+      ? await EmailModel.findOne({ id })
+      : await EmailModel.findOne().sort({ createdAt: -1 });
+    const formattedEmail = formatEmail({ content: savedEmail.content });
+    console.log({ formattedEmail });
+    return res.status(200).send({ formattedEmail });
   } catch (err) {
     return res.status(400).send({ error: err });
   }

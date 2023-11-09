@@ -13,14 +13,17 @@ function makeDescription(links) {
 function formatEmail(objEmail) {
   try {
     if (objEmail) {
+      let text = objEmail?.content?.toLowerCase();
       //delimita o inicio e o fim do texto
-      let text = objEmail?.content?.includes('Filipe Deschamps Newsletter')
-        ? objEmail?.content?.split('Filipe Deschamps Newsletter')[1]
-        : objEmail?.content;
-      text = text.split('Cancelar inscrição (')[0];
+      text = text.includes('filipe deschamps newsletter')
+        ? text.split('filipe deschamps newsletter')[1]
+        : text;
+      text = text.split('cancelar inscrição (')[0];
       //ajusta as quebras de linhas
       text = text.replace(/(\n\n)/gm, '#####');
       text = text.replace(/(\n)/gm, ' ');
+      text = text.replace(/(\r \r )/gm, '#####');
+      text = text.replace(/(\r)/gm, '');
       text = text.replace(/(#####)/gm, '\r\n');
       //separa os links e remove do texto
       const links = text.match(/\bhttps?:\/\/\S+/gi);
@@ -29,15 +32,15 @@ function formatEmail(objEmail) {
         ''
       );
       //substitui "Link Patrocinado/Afiliado" por "Link na descrição"
-      text = text.replace(/Link Patrocinado \([^()]*\)/g, 'Link na descrição!');
-      text = text.replace(/Link Afiliado \([^()]*\)/g, 'Link na descrição!');
-      text = text.replace(/Link do Vídeo \([^()]*\)/g, 'Link na descrição!');
-      text = text.replace(/Link do Curso \([^()]*\)/g, 'Link na descrição!');
-      text = text.replace(/Link do Evento \([^()]*\)/g, 'Link na descrição!');
+      text = text.replace(/link patrocinado \([^()]*\)/g, 'link na descrição!');
+      text = text.replace(/link afiliado \([^()]*\)/g, 'link na descrição!');
+      text = text.replace(/link do vídeo \([^()]*\)/g, 'link na descrição!');
+      text = text.replace(/link do curso \([^()]*\)/g, 'link na descrição!');
+      text = text.replace(/link do evento \([^()]*\)/g, 'link na descrição!');
       //adiciona finalização
       text =
         text +
-        'Este robô foi desenvolvido por Gabriel Pasini!\r\nDeixe o like e se inscreva! Até a próxima!';
+        'este robô foi desenvolvido por gabriel pasini!\r\ndeixe o like e se inscreva! até a próxima!';
 
       const description = makeDescription(links);
       const tags = objEmail?.subject?.split(' / ');
