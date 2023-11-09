@@ -54,6 +54,7 @@ Robô criado em NodeJS para buscar o último e-mail recebido da Newsletter do Fi
   BASE_URI=http://localhost:5000 OU https://localhost:5000
   ```
   Para criar suas chaves da API do google, basta seguir [este tutorial](https://developers.google.com/identity/protocols/oauth2/web-server?hl=pt-br);
+
   No meu caso, criei webhooks em um servidor do Discord, é super fácil e você pode aprender [neste tutorial](https://support.discord.com/hc/pt-br/articles/228383668);
 
 ### >> Agora que seu projeto já está rodando, precisamos entender as rotas...
