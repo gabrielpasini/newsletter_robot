@@ -57,11 +57,21 @@ const getBodyMessages = async (ids, headers) => {
     'base64'
   ).toString('utf8');
   console.log('> [gmail-robot] Conteúdo do e-mail decodificado!');
+  const subject = response.data.payload.headers.find(
+    (header) => header.name === 'Subject'
+  ).value;
+  const splittedSubject = subject.split(' / ');
+  const largestText = Math.max(...splittedSubject.map((text) => text.length));
+  const trunkatedSubject =
+    subject.length >= 100
+      ? splittedSubject
+          .filter((text) => text.length !== largestText)
+          .join(' / ')
+      : subject;
   return {
     id: response.data.id,
-    subject: response.data.payload.headers.find(
-      (header) => header.name === 'Subject'
-    ).value,
+    subject,
+    trunkatedSubject,
     content: content,
   };
 };

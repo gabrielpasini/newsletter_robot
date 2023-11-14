@@ -80,7 +80,21 @@ app.get('/', async (req, res) => {
     }
     if (savedEmail) {
       return res.send(
-        `<head><title>Notícias de tecnologia</title></head><iframe src="https://www.youtube.com/embed/${savedEmail?.videoId}" width="640" height="360" frameborder="0"></iframe><h1>${savedEmail?.subject}</h1><h2><pre>${savedEmail?.formattedContent}</pre></h2>`
+        `
+        <head>
+          <title>Notícias de tecnologia</title>
+        </head>
+        <iframe src="https://www.youtube.com/embed/${
+          savedEmail?.videoId
+        }" width="640" height="360" frameborder="0"></iframe>
+        <h1>${savedEmail?.subject}</h1>
+        ${
+          savedEmail?.trunkatedSubject
+            ? `<h1>${savedEmail?.trunkatedSubject}</h1>`
+            : ''
+        }
+        <h2><pre>${savedEmail?.formattedContent}</pre></h2>
+        `
       );
     } else if (!savedEmail && id) {
       return res.send(

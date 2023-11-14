@@ -25,7 +25,8 @@ async function uploadContent(youtube) {
   const email = await getRecentEmail();
 
   const videoFileSize = fs.statSync(videoFilePath).size;
-  const videoTitle = email.subject;
+  const videoTitle =
+    email.subject.length >= 100 ? email.trunkatedSubject : email.subject;
   const videoTags = email.tags;
   const videoDescription = email.description.toString();
   const requestParameters = {
